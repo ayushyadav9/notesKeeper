@@ -3,10 +3,12 @@ import './App.css';
 import About from "./components/About";
 import Home from './components/Home';
 import Navbar from './components/Navbar';
+import NoteState from "./context/notes/noteState";
 
 function App() {
   return (
     <>
+    <NoteState>
       <Router>
         <Navbar/>
         <Switch>
@@ -18,6 +20,7 @@ function App() {
             </Route>
         </Switch>
       </Router>
+    </NoteState>
     </>
   );
 }
