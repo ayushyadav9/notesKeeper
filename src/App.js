@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
 import About from "./components/About";
+import Alert from "./components/Alert";
 import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import NoteState from "./context/notes/noteState";
@@ -11,6 +12,7 @@ function App() {
       <NoteState>
         <Router>
           <Navbar />
+          <Alert msg="test"/>
           <div className="container">
             <Switch>
               <Route exact path="/">
