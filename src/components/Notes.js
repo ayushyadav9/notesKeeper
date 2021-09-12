@@ -13,6 +13,7 @@ const Notes = (props) => {
             getNotes()
         }
         else{
+            props.showAlert("Login to see your notes","warning")
             history.push("/login")
         }
         // eslint-disable-next-line
