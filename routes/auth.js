@@ -7,11 +7,13 @@ const jwt = require("jsonwebtoken");
 const fetchuser = require("../midleware/fetchuser");
 const {OAuth2Client} = require("google-auth-library")
 const mailgun = require("mailgun-js");
-const mg = mailgun({apiKey: "ea0164c4b8685bd5857b8282e9ff9801-dbdfb8ff-9b9fd753", domain: "sandboxc02ec6dd6e2149a6bbca93034697d867.mailgun.org"});
+require('dotenv').config();
 
-const JWT_SECRET = "hellohowareyou";
+const mg = mailgun({apiKey: process.env.API_KEY, domain: process.env.DOMAIN});
 
-const client = new OAuth2Client("420087876462-t4h4mpsa859b05f8mah08ci5us77isd5.apps.googleusercontent.com")
+const JWT_SECRET = process.env.JWT_SECRET_LOGIN;
+
+const client = new OAuth2Client(process.env.OAUTH_CLIENT)
 
 
 //Route 1
