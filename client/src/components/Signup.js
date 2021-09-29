@@ -1,12 +1,34 @@
 import React,{useState} from 'react'
 import { useHistory } from 'react-router-dom'
+import GoogleLogin from 'react-google-login';
 
 const Signup = (props) => {
-    
     const [cred, setcred] = useState({name:"",email:"",password:"",cpassword:""})
     let history = useHistory()
     const onChange = (e)=>{
         setcred({...cred, [e.target.name]: e.target.value})
+    }
+
+    const successGoogle= async (res)=>{
+        const response = await fetch('http://localhost:5000/api/auth/googleSignup', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({tokenId: res.tokenId }),
+          });
+          const json = await response.json();
+          if(json.success){
+            localStorage.setItem('token',json.authToken)
+            history.push("/") 
+            props.showAlert("Account created successfully","success")
+          }
+          else{
+            props.showAlert("Invalid Credentials","danger")
+          }
+    }
+    const failureGoogle=()=>{
+
     }
 
     const handleSubmit = async (e)=>{
@@ -19,7 +41,6 @@ const Signup = (props) => {
             body: JSON.stringify({name: cred.name,email: cred.email,password: cred.password }),
           });
           const json = await response.json();
-          console.log(json)
           if(json.success){
               //redirect
               localStorage.setItem('token',json.authToken)
@@ -50,7 +71,14 @@ const Signup = (props) => {
                 <label htmlFor="cpassword" className="form-label">Confirm Password</label>
                 <input type="password" className="form-control" id="cpassword" name="cpassword" value = {cred.cpassword} onChange={onChange} minLength={5} required/>
             </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="submit" className="btn btn-primary mx-2">Submit</button>
+            <GoogleLogin
+                clientId="420087876462-t4h4mpsa859b05f8mah08ci5us77isd5.apps.googleusercontent.com"
+                buttonText="Login with Google"
+                onSuccess={successGoogle}
+                onFailure={failureGoogle}
+                cookiePolicy={'single_host_origin'}
+            />
             </form>
         </div>
     )

@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
 import { useHistory } from 'react-router-dom'
+import GoogleLogin from 'react-google-login';
 
 const Login = (props) => {
     const [cred, setcred] = useState({email:"",password:""})
@@ -28,6 +29,30 @@ const Login = (props) => {
               props.showAlert("Invalid Credentials","danger")
           }
     }
+
+    const successGoogle= async (res)=>{
+        const response = await fetch('http://localhost:5000/api/auth/googleSignup', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({tokenId: res.tokenId }),
+          });
+          const json = await response.json();
+          if(json.success){
+            localStorage.setItem('token',json.authToken)
+            history.push("/") 
+            props.showAlert("Login Successfully","success")
+          }
+          else{
+            props.showAlert("Invalid Credentials","danger")
+          }
+    }
+    const failureGoogle=()=>{
+
+    }
+
+
     return (
         <div className="mt-3">
             <h1>Login to iNotebook</h1>
@@ -41,7 +66,14 @@ const Login = (props) => {
                 <input type="password" className="form-control" id="exampleInputPassword1" name="password" value = {cred.password} onChange={onChange}/>
             </div>
             
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="submit" className="btn btn-primary mx-2">Submit</button>
+            <GoogleLogin
+                clientId="420087876462-t4h4mpsa859b05f8mah08ci5us77isd5.apps.googleusercontent.com"
+                buttonText="Login with Google"
+                onSuccess={successGoogle}
+                onFailure={failureGoogle}
+                cookiePolicy={'single_host_origin'}
+            />
             </form>
         </div>
     )
